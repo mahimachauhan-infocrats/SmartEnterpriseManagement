@@ -1,14 +1,16 @@
-﻿using System;
-using SmartEnterprise.Models;
+﻿using SmartEnterprise.Models;
 using SmartEnterprise.Services;
 using SmartEnterprise.Services.Service;
+using SmartEnterpriseManagement.Model;
+using SmartEnterpriseManagement.Services.Service;
+using System;
 
 namespace SmartEnterprise
 {
     class Program
     {
         static EmployeeService employeeService = new EmployeeService();
-        //static ProjectService projectService = new ProjectService();
+        static ProjectService projectService = new ProjectService();
         //static TaskService taskService = new TaskService();
         //static ProductService productService = new ProductService();
         //static ClientService clientService = new ClientService();
@@ -107,26 +109,26 @@ namespace SmartEnterprise
 
             var choice = Console.ReadLine();
 
-            //switch (choice)
-            //{
-            //    case "1":
-            //        Console.Write("Title: ");
-            //        var title = Console.ReadLine();
+            switch (choice)
+            {
+                case "1":
+                    Console.Write("Title: ");
+                    var title = Console.ReadLine();
 
-            //        projectService.Add(new Project
-            //        {
-            //            Id = new Random().Next(1, 1000),
-            //            Title = title
-            //        });
+                    projectService.CreateProject(new Project
+                    {
+                        Id = new Random().Next(1, 1000),
+                        Title = title
+                    });
 
-            //        Console.WriteLine("Project Added!");
-            //        break;
+                    Console.WriteLine("Project Added!");
+                    break;
 
-            //    case "2":
-            //        foreach (var p in projectService.GetAll())
-            //            Console.WriteLine($"{p.Id} - {p.Title}");
-            //        break;
-            //}
+                case "2":
+                    foreach (var p in projectService.GetProjects())
+                        Console.WriteLine($"{p.Id} - {p.Title}");
+                    break;
+            }
         }
 
         // ================= TASK =================

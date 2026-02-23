@@ -12,6 +12,5 @@ namespace SmartEnterprise.Services.IService
         void Add(T entity);
         List<T> GetAll();
         T GetById(int id);
-        void Delete(int id);
     }
 }

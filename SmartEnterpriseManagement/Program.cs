@@ -1,9 +1,7 @@
-﻿using SmartEnterprise.Models;
+﻿using System;
+using SmartEnterprise.Models;
 using SmartEnterprise.Services;
 using SmartEnterprise.Services.Service;
-using SmartEnterpriseManagement.Models;
-using SmartEnterpriseManagement.Services.Service;
-using System;
 
 namespace SmartEnterprise
 {
@@ -11,7 +9,7 @@ namespace SmartEnterprise
     {
         static EmployeeService employeeService = new EmployeeService();
         //static ProjectService projectService = new ProjectService();
-        static Task_module task = new Task_module();
+        //static TaskService taskService = new TaskService();
         //static ProductService productService = new ProductService();
         //static ClientService clientService = new ClientService();
 
@@ -140,33 +138,27 @@ namespace SmartEnterprise
 
             var choice = Console.ReadLine();
 
-            switch (choice)
-            {
-                case "1":
-                    Console.Write("Description: ");
-                    var desc = Console.ReadLine();
-                    task.Add(new WorkTask { Description = desc });
-                    Console.WriteLine("Task Added!");
-                    break;
+            //switch (choice)
+            //{
+            //    case "1":
+            //        Console.Write("Description: ");
+            //        var desc = Console.ReadLine();
 
-                case "2":
-                    var tasks = task.GetAll();
-                    if (tasks.Count == 0)
-                    {
-                        Console.WriteLine("No tasks available.");
-                    }
-                    else
-                    {
-                        foreach (var t in tasks)
-                        {
-                            Console.WriteLine($"{t.Id} - {t.Description} ");
-                        }
-                    }
-                    break;
-                default:
-                    Console.WriteLine("Invalid choice.");
-                    break;
-            }
+            //        taskService.Add(new WorkTask
+            //        {
+            //            Id = new Random().Next(1, 1000),
+            //            Description = desc,
+            //            Status = "Pending"
+            //        });
+
+            //        Console.WriteLine("Task Added!");
+            //        break;
+
+            //    case "2":
+            //        foreach (var t in taskService.GetAll())
+            //            Console.WriteLine($"{t.Id} - {t.Description} - {t.Status}");
+            //        break;
+            //}
         }
 
         // ================= INVENTORY =================

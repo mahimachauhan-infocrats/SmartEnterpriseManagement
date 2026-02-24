@@ -41,6 +41,9 @@ namespace SmartEnterpriseManagement.Services.Service
             return _repository.GetById(id);
         }
 
-        
+        public void Remove(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -44,7 +44,7 @@ namespace SmartEnterprise
             }
         }
 
-        // ================= EMPLOYEE =================
+        // ================= EMPLOYEE ================
         static void RunEmployeeModule()
         {
             Console.WriteLine("\n--- Employee Module ---");

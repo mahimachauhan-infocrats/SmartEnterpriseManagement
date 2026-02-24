@@ -15,7 +15,7 @@ namespace SmartEnterprise
     class Program
     {
         static EmployeeService employeeService = new EmployeeService();
-        //static ProjectService projectService = new ProjectService();
+        static ProjectService projectService = new ProjectService();
         //static TaskService taskService = new TaskService();
         static IProductService productService = new ProductService();
         //static ClientService clientService = new ClientService();
@@ -51,7 +51,7 @@ namespace SmartEnterprise
             }
         }
 
-        // ================= EMPLOYEE =================
+        // ================= EMPLOYEE ================
         static void RunEmployeeModule()
         {
             Console.WriteLine("\n--- Employee Module ---");
@@ -106,7 +106,7 @@ namespace SmartEnterprise
         }
 
         // ================= PROJECT =================
-        static void RunProjectModule()
+        static void RunProjectModule()  
         {
             Console.WriteLine("\n--- Project Module ---");
             Console.WriteLine("1. Add Project");
@@ -114,26 +114,26 @@ namespace SmartEnterprise
 
             var choice = Console.ReadLine();
 
-            //switch (choice)
-            //{
-            //    case "1":
-            //        Console.Write("Title: ");
-            //        var title = Console.ReadLine();
+            switch (choice)
+            {
+                case "1":
+                    Console.Write("Title: ");
+                    var title = Console.ReadLine();
 
-            //        projectService.Add(new Project
-            //        {
-            //            Id = new Random().Next(1, 1000),
-            //            Title = title
-            //        });
+                    projectService.CreateProject(new SmartEnterpriseManagement.Model.Project
+                    {
+                        Id = new Random().Next(1, 1000),
+                        Title = title
+                    });
 
-            //        Console.WriteLine("Project Added!");
-            //        break;
+                    Console.WriteLine("Project Added!");
+                    break;
 
-            //    case "2":
-            //        foreach (var p in projectService.GetAll())
-            //            Console.WriteLine($"{p.Id} - {p.Title}");
-            //        break;
-            //}
+                case "2":
+                    foreach (var p in projectService.GetProjects())
+                        Console.WriteLine($"{p.Id} - {p.Title}");
+                    break;
+            }
         }
 
         // ================= TASK =================
@@ -225,32 +225,155 @@ namespace SmartEnterprise
         // ================= CLIENT =================
         static void RunClientModule()
         {
-            Console.WriteLine("\n--- Client Module ---");
-            Console.WriteLine("1. Add Client");
-            Console.WriteLine("2. View Clients");
+            bool isRunning = true;
 
-            var choice = Console.ReadLine();
+            while (isRunning)
+            {
+                Console.WriteLine("\n--- Client Module ---");
+                Console.WriteLine("1. Add Client");
+                Console.WriteLine("2. View Clients");
+                Console.WriteLine("3. Add Project To Client");
+                Console.WriteLine("4. Add Revenue To Client");
+                Console.WriteLine("5. Search Client By Name");
+                Console.WriteLine("6. Remove Client");
+                Console.WriteLine("0. Back");
 
-            //switch (choice)
-            //{
-            //    case "1":
-            //        Console.Write("Client Name: ");
-            //        var name = Console.ReadLine();
+                var choice = Console.ReadLine();
 
-            //        clientService.Add(new Client
-            //        {
-            //            Id = new Random().Next(1, 1000),
-            //            Name = name
-            //        });
+                switch (choice)
+                {
+                    case "1":
+                        Console.Write("Client Name: ");
+                        var name = Console.ReadLine();
 
-            //        Console.WriteLine("Client Added!");
-            //        break;
+                        Console.Write("Email: ");
+                        var email = Console.ReadLine();
 
-            //    case "2":
-            //        foreach (var c in clientService.GetAll())
-            //            Console.WriteLine($"{c.Id} - {c.Name}");
-            //        break;
-            //}
+                        Console.Write("Phone: ");
+                        var phone = Console.ReadLine();
+
+                        Console.Write("Company Name: ");
+                        var company = Console.ReadLine();
+
+                        Console.Write("Assign Account Manager Id (optional): ");
+                        var managerInput = Console.ReadLine();
+                        int? managerId = string.IsNullOrWhiteSpace(managerInput)
+                                            ? null
+                                            : int.Parse(managerInput);
+
+                        clientService.Add(new Client
+                        {
+                            Name = name,
+                            Email = email,
+                            Phone = phone,
+                            CompanyName = company,
+                            AccountManagerId = managerId,
+                            TotalRevenue = 0
+                        });
+
+                        Console.WriteLine("Client Added Successfully!");
+                        break;
+
+                    case "2":
+                        var clients = clientService.GetAll();
+
+                        if (clients.Count == 0)
+                        {
+                            Console.WriteLine("No clients found.");
+                        }
+                        else
+                        {
+                            foreach (var c in clients)
+                            {
+                                Console.WriteLine("=================================");
+                                Console.WriteLine($"ID: {c.Id}");
+                                Console.WriteLine($"Name: {c.Name}");
+                                Console.WriteLine($"Email: {c.Email}");
+                                Console.WriteLine($"Phone: {c.Phone}");
+                                Console.WriteLine($"Company: {c.CompanyName}");
+                                Console.WriteLine($"Revenue: {c.TotalRevenue}");
+                                Console.WriteLine($"Created: {c.CreatedDate}");
+                                Console.WriteLine($"Projects Count: {c.Projects.Count}");
+                                Console.WriteLine("=================================");
+                            }
+                        }
+                        break;
+
+                    case "3":
+                        Console.Write("Enter Client Id: ");
+                        int clientId = int.Parse(Console.ReadLine());
+
+                        var client = clientService.GetById(clientId);
+
+                        if (client == null)
+                        {
+                            Console.WriteLine("Client not found!");
+                            break;
+                        }
+
+                        Console.Write("Enter Project Name: ");
+                        var projectName = Console.ReadLine();
+
+                        client.Projects.Add(projectName);
+                        clientService.Update(client);
+
+                        Console.WriteLine("Project Added To Client!");
+                        break;
+
+                    case "4":
+                        Console.Write("Enter Client Id: ");
+                        int revenueClientId = int.Parse(Console.ReadLine());
+
+                        var revenueClient = clientService.GetById(revenueClientId);
+
+                        if (revenueClient == null)
+                        {
+                            Console.WriteLine("Client not found!");
+                            break;
+                        }
+
+                        Console.Write("Enter Revenue Amount: ");
+                        decimal amount = decimal.Parse(Console.ReadLine());
+
+                        revenueClient.TotalRevenue += amount;
+                        clientService.Update(revenueClient);
+
+                        Console.WriteLine("Revenue Updated!");
+                        break;
+
+                    case "5":
+                        Console.Write("Enter Name to Search: ");
+                        var search = Console.ReadLine();
+
+                        var result = clientService.GetAll()
+                                    .Where(c => c.Name.Contains(search,
+                                           StringComparison.OrdinalIgnoreCase))
+                                    .ToList();
+
+                        foreach (var c in result)
+                        {
+                            Console.WriteLine($"{c.Id} - {c.Name}");
+                        }
+                        break;
+
+                    case "6":
+                        Console.Write("Enter Client Id to Remove: ");
+                        int removeId = int.Parse(Console.ReadLine());
+
+                        clientService.Remove(removeId);
+                        Console.WriteLine("Client Removed!");
+                        break;
+
+
+                    case "0":
+                        isRunning = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid choice. Try again.");
+                        break;
+                }
+            }
         }
     }
 }
